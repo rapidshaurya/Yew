@@ -9,7 +9,7 @@ struct User{
 #[function_component(App)]
 fn app() -> Html {
     log!("User Details"); // use log!() for console.log()
-    log!(serde_json::to_string_pretty(   // for printing in console.log() object we use have to convert it
+    log!(serde_json::to_string_pretty(   // for printing object in console.log() we use have to convert it
         &User{
             username: String::from("Rammu"),
             age:23
