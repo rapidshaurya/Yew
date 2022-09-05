@@ -1,5 +1,5 @@
 /*
-In this example, we will see how to pass property
+In this example, we will help you how to pass property
 */
 use yew::prelude::*;
 
