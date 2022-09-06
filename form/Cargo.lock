@@ -62,7 +62,9 @@ name = "form"
 version = "0.1.0"
 dependencies = [
  "gloo 0.8.0",
+ "serde",
  "wasm-bindgen",
+ "wasm-bindgen-futures",
  "web-sys",
  "yew",
 ]
