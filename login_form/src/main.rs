@@ -1,28 +1,46 @@
 //yewdux is a simple state management for yew applications.
 //using gloo for making request and for console.log()
-use yewdux::prelude::*;
+use yewdux::{prelude::*, storage};
 use yew::prelude::*;
 use gloo::{console::log, net::http::Request};
 use web_sys::{HtmlInputElement};
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
-#[derive( Default, Clone, PartialEq, Eq, Store, Serialize)]
+#[derive( Default, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UserData{
     pub email:String,
     pub password:String,
 }
+
+impl Store for UserData {
+    fn new() -> Self {
+        storage::load(storage::Area::Local)
+            .expect("Unable to load state")
+            .unwrap_or_default()
+    }
+
+    fn should_notify(&self, _: &Self) -> bool{
+        storage::save(self, storage::Area::Local).expect("Unable to save state");
+        true
+    }
+}
+
+
 
 
 
 
 #[function_component(Form)]
 pub fn form()-> Html{
-   
-    let (_state, dispatch) = use_store::<UserData>();
+    
+    let (state, dispatch) = use_store::<UserData>();
+
+        
        
         let email =  dispatch.reduce_mut_callback_with(|state, event:Event| {
             let email = event.target_unchecked_into::<HtmlInputElement>().value();
             state.email = email;
+            
         });
 
         
@@ -51,6 +69,10 @@ pub fn form()-> Html{
                 else{
                     log!("user is an employee")
                 }
+                
+                
+            
+              
             }
             else{
                 log!(request.text().await.unwrap());
@@ -60,15 +82,21 @@ pub fn form()-> Html{
         });
 
         html!(
+            <>
         <div>
-          <label for="email">{ "Email" }</label>
-          <input type="email" id="email" onchange={email}/>
+          <label for="email" >{ "Email" }</label>
+          <input type="email" id="email" placeholder={state.email.clone()} onchange={email}/>
           <br />
           <label for="password">{ "Password" }</label>
           <input type="password" id="password" onchange={password} />
           <br />
           <button onclick={submit}>{ "submit" }</button>
         </div>
+        <div>
+           <h4>{ "Details" }</h4>
+           <p>{"Email: "} {&state.email} </p>
+        </div>
+        </>
         ) 
     
 }
