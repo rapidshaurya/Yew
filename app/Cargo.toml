@@ -1,0 +1,18 @@
+[package]
+name = "app"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+yew = "0.19"
+gloo="0.8.0"
+wasm-bindgen = "0.2.79"
+serde="1.0.144"
+web-sys ={version="0.3.56", features=["HtmlInputElement"]}
+yewdux = "0.8.2"
+
+yew-router="0.16.0"
+# for async
+wasm-bindgen-futures = "0.4.32"
