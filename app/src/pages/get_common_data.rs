@@ -83,10 +83,21 @@ pub fn get_common_data() -> Html {
                     </select>
                    </a>
                    <a class="split">
-                      <button {onclick}>{ "Log Out" }</button>
+                      <i class="btn-sm " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+
+                      <img src="img/three-dots-vertical.svg" alt="menu"/>
+                      </i>
+                      <ul class="dropdown-menu">
+
+                        <li><a class="dropdown-item disabled" href="#">{"Version 0.0.1"}</a></li>
+                        <li><a class="dropdown-item Settings" style="cursor: pointer; color:rgb(115, 116, 117);" href="#">{"Settings"}</a></li>
+                        <li><a class="dropdown-item" id="log_out" style="cursor: pointer; color:rgb(115, 116, 117);" href="#" onclick={onclick}>{"Log Out"}</a></li>
+
+                      </ul>
+                      
                    </a>
                    <a class="split">
-                        <img src="img/Settings.svg" alt="rust image"/> 
+                        <img src="img/Settings.svg" alt="settings"/> 
                    </a>
                    
                    </div>
@@ -102,21 +113,38 @@ pub fn get_common_data() -> Html {
 
 #[function_component(Nav2)]
 pub fn nav2()->Html{
+    let  pause_state = use_state(|| "pointer-events: none;".to_owned());
+    let  start_state = use_state(|| "pointer-events: auto;".to_owned());
 
-    let pause = Callback::from(|_|{
-        log!("stop screenshot");
+    let f1 = pause_state.clone();
+    let f2 = start_state.clone();
+    let pause = Callback::from(move |_|{
+        let str = f1.deref().clone();
+        if str.contains("pointer-events: auto;") {
+            log!("pause screenshot");
+            f1.set("pointer-events: none; filter: invert(52%) sepia(3%) saturate(17%) hue-rotate(346deg) brightness(95%) contrast(85%)".to_owned());
+            f2.set("pointer-events: auto; filter: grayscale(100%) brightness(80%) sepia(300%) hue-rotate(50deg) saturate(500%);".to_owned());
+        }
     });
-    let play = Callback::from(|_|{
-        log!("play screenshot");
+
+    let f1 = pause_state.clone();
+    let f2 = start_state.clone();
+    let play = Callback::from(move |_|{
+        let str = f2.deref().clone();
+        if str.contains("pointer-events: auto;") {
+            log!("play screenshot");
+            f2.set("pointer-events: none; filter: invert(52%) sepia(3%) saturate(17%) hue-rotate(346deg) brightness(95%) contrast(85%)".to_owned());
+            f1.set("pointer-events: auto; filter:invert(10%) sepia(96%) saturate(5607%) hue-rotate(359deg) brightness(120%) contrast(114%);".to_owned());
+        }
     });
     html!(
         <div class="nav2">
             <input type="text" />
 
-            <img src="img/play.svg" alt="play image" onclick={play}/> 
+            <img src="img/play.svg" alt="play image" style={start_state.deref().clone()} onclick={play}/> 
          
          
-            <img src="img/pause.svg" alt="pause image" onclick={pause}/> 
+            <img src="img/pause.svg" alt="pause image" style={pause_state.deref().clone()} onclick={pause}/> 
     
            
         </div>
