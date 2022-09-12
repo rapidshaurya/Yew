@@ -1,7 +1,7 @@
 
 use yewdux::prelude::*;
 use yew::{prelude::*};
-use gloo::{console::log, net::http::{Request}};
+use gloo::{console::log, net::http::{Request}, storage::{LocalStorage, Storage}};
 use serde::{Serialize, Deserialize};
 use web_sys::{HtmlInputElement};
 use stylist::{style, yew::styled_component}; // using style for adding css
@@ -13,6 +13,11 @@ use yew_router::{prelude::{use_history, History}};
 struct UserData{
     email:String,
     password:String,
+}
+#[derive(Serialize, Deserialize)]
+pub struct Token{
+  pub jwt:String,
+  pub name:String,
 }
 
 #[styled_component(LoginForm)]
@@ -60,7 +65,8 @@ pub fn login_form() -> Html {
             }
             else{
                 log!("user is an employee");
-                
+                let data = request.text().await.unwrap();
+                LocalStorage::set("token", data).ok();
                 history.push(Route::Screenshot);
             }
         }
