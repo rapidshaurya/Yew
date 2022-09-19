@@ -1,4 +1,5 @@
 
+use serde_json::Value;
 use yewdux::prelude::*;
 use yew::{prelude::*};
 use gloo::{console::log, net::http::{Request}, storage::{LocalStorage, Storage}};
@@ -65,7 +66,7 @@ pub fn login_form() -> Html {
             }
             else{
                 log!("user is an employee");
-                let data = request.text().await.unwrap();
+                let data:Value = request.json().await.unwrap();
                 LocalStorage::set("token", data).ok();
                 history.push(Route::Screenshot);
             }
